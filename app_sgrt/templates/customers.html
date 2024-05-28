@@ -1,0 +1,15 @@
+{% extends 'master.html' %}
+
+{% block content %}
+
+    <p><a href="{% url 'index' %}">Home</a></p>
+
+    <h1>List of Customers</h1>
+
+    {% for customer in customers %}
+        <p>
+            <a href="customer/{{customer.id}}">{{customer.name}}</a>
+        </p>
+    {% endfor %}    
+
+{%endblock%}

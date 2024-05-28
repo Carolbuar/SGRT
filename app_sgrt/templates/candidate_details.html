@@ -1,0 +1,30 @@
+{% extends 'master.html' %}
+
+{% block content %}
+    <h1>About Candidate</h1>
+
+    <p>Name: {{candidate.first_name}} {{candidate.last_name}}</p>
+    <p>Email: {{candidate.email}}</p>
+    <p>Resume: 
+        {% if candidate.resume %}
+            <a href="{{ candidate.resume.url }}" target="_blank">Ver Currículo</a>
+        {% else %}
+            Nenhum currículo enviado
+        {% endif %}
+    </p>
+    <p>Skills: {{candidate.skills}}</p>
+    <p>Applied Jobs: 
+        <ul>
+            {% for job in applied_jobs %}
+                <li>{{ job.name }}</li>
+            {% empty %}
+                <li>Any job application.</li>
+            {% endfor %}
+        </ul>
+    <p>Registered At: {{candidate.created_at}}</p>
+    <p>Updated At: {{candidate.updated_at}}</p>
+    
+    <p><br>
+        <a href="{% url 'candidates' %}">Back to All Candidates</a>
+    </p>
+{%endblock%}

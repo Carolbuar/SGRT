@@ -1,0 +1,17 @@
+{% extends 'master.html' %}
+
+{% block content %}
+    <h1>About Job</h1>
+
+    <p>Name: {{job.name}}</p>
+    <p>Status: {{job.status}}</p>
+    <p>Customer: {{job.customer}}</p>
+    <p>Description: {{job.description}}</p>
+    <p>Location: {{job.location}}</p>
+    <p>Postado em: {{job.created_at}}</p>
+    <p>Quantidade de Candidatos: {{job.qtt_candidatesforjob}}</p>
+    
+    <p><br>
+        <a href="{% url 'jobs' %}">Back to All Jobs</a>
+    </p>
+{%endblock%}

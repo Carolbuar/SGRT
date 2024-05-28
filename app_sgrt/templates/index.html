@@ -1,0 +1,8 @@
+{% extends 'master.html' %}
+
+{% block content %}
+    <h1>Bem vindo!</h1>
+    <p><a href="{% url 'customers' %}">Customers</a></p>
+    <p><a href="{% url 'jobs' %}">Jobs</a></p>
+    <p><a href="{% url 'candidates' %}">Candidates</a></p>
+{%endblock%}
