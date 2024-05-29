@@ -1,10 +1,11 @@
 # from django.shortcuts import render
-from rest_framework import viewsets         
+from rest_framework import viewsets, status   
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
 from .serializers import CustomerSerializer, JobSerializer, CandidateSerializer
 from app_sgrt.models import Customer, Job, Candidate
-from rest_framework import generics
+
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -27,9 +28,12 @@ def customerList(request):
 
 @api_view(['GET'])
 def customerDetail(request, pk):
-    customers = Customer.objects.get(id=pk)
-    serializer = CustomerSerializer(customers, many=False)
-    return Response(serializer.data)
+    try:
+        customers = Customer.objects.get(id=pk)
+        serializer = CustomerSerializer(customers, many=False)
+        return Response(serializer.data)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def customerCreate(request):
@@ -37,24 +41,31 @@ def customerCreate(request):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def customerUpdate(request, pk):
     customer = Customer.objects.get(id=pk)
     serializer = CustomerSerializer(instance=customer, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def customerDelete(request, pk):
-    customer = Customer.objects.get(id=pk)
-    customer.delete()
-    return Response('Customer was deleted!')
+    try:
+        customer = Customer.objects.get(id=pk)
+        customer.delete()
+        return Response('Customer was deleted!', status=status.HTTP_204_NO_CONTENT)
+
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def jobList(request):
@@ -64,9 +75,12 @@ def jobList(request):
 
 @api_view(['GET'])
 def jobDetail(request, pk):
-    jobs = Job.objects.get(id=pk)
-    serializer = JobSerializer(jobs, many=False)
-    return Response(serializer.data)
+    try:
+        jobs = Job.objects.get(id=pk)
+        serializer = JobSerializer(jobs, many=False)
+        return Response(serializer.data)
+    except Job.DoesNotExist:
+        return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def jobCreate(request):
@@ -74,24 +88,31 @@ def jobCreate(request):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def jobUpdate(request, pk):
     job = Job.objects.get(id=pk)
     serializer = JobSerializer(instance=job, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Job.DoesNotExist:
+        return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
+@permission_classes([IsAdminUser])
 def jobDelete(request, pk):
-    job = Job.objects.get(id=pk)
-    job.delete()
-    return Response('Job was deleted!')
+    try:
+        job = Job.objects.get(id=pk)
+        job.delete()
+        return Response('Job was deleted!', status=status.HTTP_204_NO_CONTENT)
+
+    except Job.DoesNotExist:
+        return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def candidateList(request):
@@ -101,9 +122,12 @@ def candidateList(request):
 
 @api_view(['GET'])
 def candidateDetail(request, pk):
-    candidates = Candidate.objects.get(id=pk)
-    serializer = CandidateSerializer(candidates, many=False)
-    return Response(serializer.data)
+    try:
+        candidates = Candidate.objects.get(id=pk)
+        serializer = CandidateSerializer(candidates, many=False)
+        return Response(serializer.data)
+    except Candidate.DoesNotExist:
+        return Response({'error': 'Candidate not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def candidateCreate(request):
@@ -111,21 +135,27 @@ def candidateCreate(request):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def candidateUpdate(request, pk):
     candidate = Candidate.objects.get(id=pk)
     serializer = CandidateSerializer(instance=candidate, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-    return Response(serializer.data)
+    try:
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Candidate.DoesNotExist:
+        return Response({'error': 'Candidate not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
 def candidateDelete(request, pk):
-    candidate = Candidate.objects.get(id=pk)
-    candidate.delete()
-    return Response('Candidate was deleted!')
+    try:
+        candidate = Candidate.objects.get(id=pk)
+        candidate.delete()
+        return Response('Candidate was deleted!', status=status.HTTP_204_NO_CONTENT)
+
+    except Candidate.DoesNotExist:
+        return Response({'error': 'Candidate not found.'}, status=status.HTTP_404_NOT_FOUND)
