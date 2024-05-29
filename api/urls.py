@@ -1,4 +1,5 @@
-from .views import CustomerViewSet, JobViewSet, CandidateViewSet, customerList, CustomerDetail, JobList, JobDetail, CandidateList, CandidateDetail
+from . import views
+from .views import CustomerViewSet, JobViewSet, CandidateViewSet
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -10,11 +11,20 @@ router.register(r'candidate_viewset', CandidateViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    # path('customerList/', CustomerList.as_view()),
-    # path('customerDetail/<int:pk>/', CustomerDetail.as_view()),
-    # path('jobList/', JobList.as_view()),
-    # path('jobdetail/<int:pk>/', JobDetail.as_view()),
-    # path('candidateList/', CandidateList.as_view()),
-    # path('candidateDetail/<int:pk>/', CandidateDetail.as_view()),
+    path('customer-list/', views.customerList, name="customer_list"),
+    path('customer-detail/<int:pk>/', views.customerDetail, name="customer_detail"),
+    path("customer-create/", views.customerCreate, name="customer_create"),
+    path('customer-update/<int:pk>/', views.customerUpdate, name="customer_update"),
+    path('customer-delete/<int:pk>/', views.customerDelete, name="customer_delete"),
+    path('job-list/', views.jobList, name="job_list"),
+    path('job-detail/<int:pk>/', views.jobDetail, name="job_detail"),
+    path('job-create/', views.jobCreate, name="job_create"),
+    path('job-update/<int:pk>/', views.jobUpdate, name="job_update"),
+    path('job-delete/<int:pk>/', views.jobDelete, name="job_delete"),
+    path('candidate-list/', views.candidateList, name="candidate_list"),
+    path('candidate-detail/<int:pk>/', views.candidateDetail, name="candidate_detail"),
+    path('candidate-create/', views.candidateCreate, name="candidate_create"),
+    path('candidate-update/<int:pk>/', views.candidateUpdate, name="candidate_update"),
+    path('candidate-delete/<int:pk>/', views.candidateDelete, name="candidate_delete"),
     
 ]
