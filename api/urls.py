@@ -26,5 +26,8 @@ urlpatterns = [
     path('candidate-create/', views.candidateCreate, name="candidate_create"),
     path('candidate-update/<int:pk>/', views.candidateUpdate, name="candidate_update"),
     path('candidate-delete/<int:pk>/', views.candidateDelete, name="candidate_delete"),
+    path("add-candidate-to-job/<int:candidate_id>/<int:job_id>/", views.addCandidateToJob, name="add_candidate_to_job"),
+    path("candidates-applied-to-job/<int:job_id>/", views.candidatesAppliedToJob, name="candidates_applied_to_job"),
+    path("filterToJob/<int:job_id>/", views.filterToJob, name="filter_to_job"),
     
 ]
