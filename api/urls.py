@@ -1,13 +1,13 @@
 from . import views
-from .views import CustomerViewSet, JobViewSet, CandidateViewSet
+from .views import (CustomerViewSet, JobViewSet, CandidateViewSet, FilteredJobListByCustomer, FilteredJobListByStatus, FilteredJobListByLocation)
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register(r'customer_viewset', CustomerViewSet)
-router.register(r'job_viewset', JobViewSet)
-router.register(r'candidate_viewset', CandidateViewSet)
+router.register(r'customer', CustomerViewSet)
+router.register(r'job', JobViewSet)
+router.register(r'candidate', CandidateViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('candidate-delete/<int:pk>/', views.candidateDelete, name="candidate_delete"),
     path("add-candidate-to-job/<int:candidate_id>/<int:job_id>/", views.addCandidateToJob, name="add_candidate_to_job"),
     path("candidates-applied-to-job/<int:job_id>/", views.candidatesAppliedToJob, name="candidates_applied_to_job"),
-    path("filterToJob/<int:job_id>/", views.filterToJob, name="filter_to_job"),
-    
+    path("filtered-job-list-location/", FilteredJobListByLocation.as_view(), name="filtered_job_list_location"),
+    path("filtered-job-list-status/", FilteredJobListByStatus.as_view(), name="filtered_job_list_status"),
+    path("filtered-job-list-customer/", FilteredJobListByCustomer.as_view(), name="filtered_job_list_customer"),
 ]

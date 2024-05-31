@@ -8,7 +8,7 @@ from app_sgrt.models import Customer, Job, Candidate
 import django_filters
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import JobFilter
+from .filters import JobFilterLocation, JobFilterStatus, JobFilterCustomer
 
 
 
@@ -16,19 +16,41 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
+    def get_permissions(self):
+        if self.action == 'destroy':
+            self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
+
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+
+    def get_permissions(self):
+        if self.action == 'destroy':
+            self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
 
 class CandidateViewSet(viewsets.ModelViewSet):
     queryset = Candidate.objects.all()
     serializer_class = CandidateSerializer
 
-class JobListView(generics.ListAPIView):
+class FilteredJobListByLocation(generics.ListAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_class = JobFilter
+    filterset_class = JobFilterLocation
+
+class FilteredJobListByStatus(generics.ListAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = JobFilterStatus
+
+class FilteredJobListByCustomer(generics.ListAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = JobFilterCustomer
 
 @api_view(['GET'])
 def customerList(request):
@@ -105,6 +127,10 @@ def jobCreate(request):
 def jobUpdate(request, pk):
     job = Job.objects.get(id=pk)
     serializer = JobSerializer(instance=job, data=request.data)
+
+    if 'status' in request.data and not request.user.is_staff:
+        return Response({'error': 'Only administrators can change the status of a job.'}, status=status.HTTP_403_FORBIDDEN)
+
     try:
         if serializer.is_valid():
             serializer.save()
@@ -181,7 +207,7 @@ def addCandidateToJob(request, candidate_id, job_id):
         return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     candidate.applied_jobs.add(job)
-    candidate.save()
+    return Response('Candidate associated with Job was created!', status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def candidatesAppliedToJob(request, job_id):
