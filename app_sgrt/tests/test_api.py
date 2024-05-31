@@ -8,11 +8,18 @@ from api.serializers import CustomerSerializer, JobSerializer, CandidateSerializ
 class CustomerAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.customer1 = Customer.objects.create(name='Customer 1', email='customer1@example.com', address='123 Main St', phone='555-1234')
+        self.customer1 = Customer.objects.create(
+            name='Customer 1', 
+            email='customer1@example.com', 
+            address='123 Main St', 
+            phone='555-1234', 
+            representative_name='John Doe'
+        )
+    
         
     def test_create_customer(self):
         url = reverse('customer_create')
-        data = {'name': 'New Customer', 'email': 'newcustomer@example.com', 'address': '456 Elm St', 'phone': '555-5678'}
+        data = {'name': 'New Customer', 'email': 'newcustomer@example.com', 'address': '456 Elm St', 'phone': '555-5678', 'representative_name': 'Jane Doe'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Customer.objects.count(), 2) 
@@ -31,8 +38,8 @@ class CustomerAPITestCase(TestCase):
 
     def test_update_customer(self):
         url = reverse('customer_update', args=[self.customer1.id])
-        data = {'name': 'Updated Customer Name'}
-        response = self.client.patch(url, data, format='json')
+        data = {'name': 'Updated Customer Name','email': 'newcustomer@example.com', 'address': '456 Elm St', 'phone': '555-5678', 'representative_name': 'Jane Doe'}
+        response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.customer1.refresh_from_db()
         self.assertEqual(self.customer1.name, 'Updated Customer Name')
@@ -48,9 +55,11 @@ class JobAPITestCase(TestCase):
         self.client = APIClient()
         self.customer = Customer.objects.create(
             name='Test Customer',
-            email='test@example.com',
+            email='testcustomer@example.com',
+            website='http://example.com',
             address='123 Test St',
-            phone='555-1234'
+            phone='1234567890',
+            representative_name='John Doe'
         )
 
     def test_create_job(self):
@@ -134,10 +143,12 @@ class CandidateAPITestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.job = Job.objects.create(
-            name='Test Job',
-            status='open',
-            description='Test job description',
-            location='Test location'
+           name='Test Job',
+           status='open',
+           customer=1,
+           description='Test job description',
+           location='Test location'
+           
         )
 
     def test_create_candidate(self):

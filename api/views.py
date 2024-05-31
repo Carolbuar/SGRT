@@ -16,19 +16,19 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    def get_permissions(self):
-        if self.action == 'destroy':
-            self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
+    # def get_permissions(self):
+    #     if self.action == 'destroy':
+    #         self.permission_classes = [IsAdminUser]
+    #     return super().get_permissions()
 
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
 
-    def get_permissions(self):
-        if self.action == 'destroy':
-            self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
+    # def get_permissions(self):
+    #     if self.action == 'destroy':
+    #         self.permission_classes = [IsAdminUser]
+    #     return super().get_permissions()
 
 class CandidateViewSet(viewsets.ModelViewSet):
     queryset = Candidate.objects.all()
@@ -83,13 +83,13 @@ def customerUpdate(request, pk):
     try:
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Customer.DoesNotExist:
         return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def customerDelete(request, pk):
     try:
         customer = Customer.objects.get(id=pk)
@@ -140,7 +140,7 @@ def jobUpdate(request, pk):
         return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-@permission_classes([IsAdminUser])
+# @permission_classes([IsAdminUser])
 def jobDelete(request, pk):
     try:
         job = Job.objects.get(id=pk)
