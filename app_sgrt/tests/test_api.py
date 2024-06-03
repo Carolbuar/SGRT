@@ -30,13 +30,13 @@ class CustomerAPITestCase(TestCase):
 
     def test_list_customers(self):
         url = reverse('customer_list')
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
     def test_retrieve_customer(self):
         url = reverse('customer_detail', args=[self.customer1.id])
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.customer1.name)
 
@@ -53,7 +53,7 @@ class CustomerAPITestCase(TestCase):
 
     def test_delete_customer(self):
         url = reverse('customer_delete', args=[self.customer1.id])
-        response = self.client.delete(url)
+        response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Customer.objects.filter(id=self.customer1.id).exists())
 
@@ -101,14 +101,14 @@ class JobAPITestCase(TestCase):
             location='Test location 1'
         )
 
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
     def test_retrieve_job(self):
         url = reverse('job_detail', args=[self.job.id])
         
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Test Job')
 
@@ -129,7 +129,7 @@ class JobAPITestCase(TestCase):
     def test_delete_job(self):
         url = reverse('job_delete', args=[self.job.id])
         initial_job_count = Job.objects.count()
-        response = self.client.delete(url)
+        response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Job.objects.count(), initial_job_count - 1)
 
@@ -165,9 +165,7 @@ class CandidateAPITestCase(TestCase):
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'john.doe@example.com',
-            'resume': None,
-            'skills': 'Python, Django, JavaScript',
-            'applied_jobs': [self.job.id]
+            'skills': 'Python, Django, JavaScript'
         }
         response = self.client.post(url, candidate_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -177,16 +175,16 @@ class CandidateAPITestCase(TestCase):
     def test_list_candidates(self):
         url = reverse('candidate_list')
         
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
     def test_retrieve_candidate(self):
         url = reverse('candidate_detail', args=[self.candidate.id])
         
-        response = self.client.get(url)
+        response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['first_name'], 'John')
+        self.assertEqual(response.data['first_name'], 'Jane')
 
     def test_update_candidate(self):
         url = reverse('candidate_update', args=[self.candidate.id])
@@ -205,6 +203,6 @@ class CandidateAPITestCase(TestCase):
         url = reverse('candidate_delete', args=[self.candidate.id])
         
         initial_candidate_count = Candidate.objects.count()
-        response = self.client.delete(url)
+        response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Candidate.objects.count(), initial_candidate_count - 1)

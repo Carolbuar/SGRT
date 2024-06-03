@@ -117,7 +117,7 @@ def jobDetail(request, pk):
 
 @api_view(['POST'])
 def jobCreate(request):
-    serializer = JobSerializer(data=request.data, status=status.HTTP_200_OK)
+    serializer = JobSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
