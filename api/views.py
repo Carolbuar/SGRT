@@ -56,14 +56,14 @@ class FilteredJobListByCustomer(generics.ListAPIView):
 def customerList(request):
     customers = Customer.objects.all()
     serializer = CustomerSerializer(customers, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def customerDetail(request, pk):
     try:
         customers = Customer.objects.get(id=pk)
         serializer = CustomerSerializer(customers, many=False)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Customer.DoesNotExist:
         return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -76,17 +76,18 @@ def customerCreate(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def customerUpdate(request, pk):
-    customer = Customer.objects.get(id=pk)
-    serializer = CustomerSerializer(instance=customer, data=request.data)
     try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        customer = Customer.objects.get(id=pk)
     except Customer.DoesNotExist:
         return Response({'error': 'Customer not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = CustomerSerializer(instance=customer, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 # @permission_classes([IsAdminUser])
@@ -103,41 +104,42 @@ def customerDelete(request, pk):
 def jobList(request):
     jobs = Job.objects.all()
     serializer = JobSerializer(jobs, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def jobDetail(request, pk):
     try:
         jobs = Job.objects.get(id=pk)
         serializer = JobSerializer(jobs, many=False)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Job.DoesNotExist:
         return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 def jobCreate(request):
-    serializer = JobSerializer(data=request.data)
+    serializer = JobSerializer(data=request.data, status=status.HTTP_200_OK)
 
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def jobUpdate(request, pk):
-    job = Job.objects.get(id=pk)
-    serializer = JobSerializer(instance=job, data=request.data)
-
-    if 'status' in request.data and not request.user.is_staff:
-        return Response({'error': 'Only administrators can change the status of a job.'}, status=status.HTTP_403_FORBIDDEN)
-
     try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        job = Job.objects.get(id=pk)
     except Job.DoesNotExist:
         return Response({'error': 'Job not found.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # if 'status' in request.data and not request.user.is_staff:
+    #     return Response({'error': 'Only administrators can change the status of a job.'}, status=status.HTTP_403_FORBIDDEN)
+    
+    serializer = JobSerializer(instance=job, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+   
 
 @api_view(['DELETE'])
 # @permission_classes([IsAdminUser])
@@ -154,14 +156,14 @@ def jobDelete(request, pk):
 def candidateList(request):
     candidates = Candidate.objects.all()
     serializer = CandidateSerializer(candidates, many=True)
-    return Response(serializer.data)  
+    return Response(serializer.data, status=status.HTTP_200_OK)  
 
 @api_view(['GET'])
 def candidateDetail(request, pk):
     try:
         candidates = Candidate.objects.get(id=pk)
         serializer = CandidateSerializer(candidates, many=False)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except Candidate.DoesNotExist:
         return Response({'error': 'Candidate not found.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -174,18 +176,19 @@ def candidateCreate(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def candidateUpdate(request, pk):
-    candidate = Candidate.objects.get(id=pk)
-    serializer = CandidateSerializer(instance=candidate, data=request.data)
     try:
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        candidate = Candidate.objects.get(id=pk)
     except Candidate.DoesNotExist:
         return Response({'error': 'Candidate not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+    serializer = CandidateSerializer(instance=candidate, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 @api_view(['DELETE'])
 def candidateDelete(request, pk):
     try:
