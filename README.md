@@ -49,50 +49,55 @@ Optou-se incluir a API em uma raiz diferente da aplicação somente para fins de
 
 ## 4. APIs e Endpoints
 ### Customer (ModelViewSet)
-- **GET /customers/**: Lista todos os clientes
-- **GET /customers/{id}/**: Detalha um cliente específico
-- **POST /customers/**: Cria um novo cliente
-- **PUT /customers/{id}/**: Atualiza um cliente existente
-- **DELETE /customers/{id}/**: Deleta um cliente
+- **GET /api/customers/**: Lista todos os clientes
+- **GET /api/customers/{id}/**: Detalha um cliente específico
+- **POST /api/customers/**: Cria um novo cliente
+- **PUT /api/customers/{id}/**: Atualiza um cliente existente
+- **DELETE /api/customers/{id}/**: Deleta um cliente
 
 ### Job (ModelViewSet)
-- **GET /jobs/**: Lista todos os empregos
-- **GET /jobs/{id}/**: Detalha um emprego específico
-- **POST /jobs/**: Cria um novo emprego
-- **PUT /jobs/{id}/**: Atualiza um emprego existente
-- **DELETE /jobs/{id}/**: Deleta um emprego
+- **GET /api/jobs/**: Lista todas as vagas de emprego
+- **GET /api/jobs/{id}/**: Detalha uma vaga de emprego específica
+- **POST /api/jobs/**: Cria uma nova vaga de emprego
+- **PUT /api/jobs/{id}/**: Atualiza uma vaga de emprego existente
+- **DELETE /api/jobs/{id}/**: Deleta uma vaga de emprego
 
 ### Candidate (ModelViewSet)
-- **GET /candidates/**: Lista todos os candidatos
-- **GET /candidates/{id}/**: Detalha um candidato específico
-- **POST /candidates/**: Cria um novo candidato
-- **PUT /candidates/{id}/**: Atualiza um candidato existente
-- **DELETE /candidates/{id}/**: Deleta um candidato
+- **GET /api/candidates/**: Lista todos os candidatos
+- **GET /api/candidates/{id}/**: Detalha um candidato específico
+- **POST /api/candidates/**: Cria um novo candidato
+- **PUT /api/candidates/{id}/**: Atualiza um candidato existente
+- **DELETE /api/candidates/{id}/**: Deleta um candidato
 
 ### Associações
-- **POST /jobs/{job_id}/candidates/{candidate_id}/add/**: Adiciona um candidato a um emprego
-- **GET /jobs/{job_id}/candidates/**: Lista candidatos associados a um emprego
+- **POST /api/add-candidate-to-job/{candidate_id}/{job_id}/**: Adiciona um candidato a um emprego
+- **GET /api/candidates-applied-to-job/{job_id}/**: Lista candidatos associados a um emprego
+
+### Filters
+- **GET /api/filtered-job-list-location/**: Filtra as vagas de emprego por localização
+- **GET /api/filtered-job-list-status/**: Filtra as vagas de emprego pelo status
+- **GET /api/filtered-job-list-customer/**: Filtra as vagas de emprego por localização
 
 ### @api_view - Customer
-- **GET /customer-list/**:Lista todos os clientes
-- **GET /customer-detail/<int:pk>/**: Detalha um cliente específico
-- **POST /customer-create/**: Cria um novo cliente
-- **PUT /customer-update/<int:pk>/**: Atualiza um cliente existente
-- **DELETE /customer-delete/<int:pk>/**: Deleta um cliente
+- **GET /api/customer-list/**:Lista todos os clientes
+- **GET /api/customer-detail/{id}/**: Detalha um cliente específico
+- **POST /api/customer-create/**: Cria um novo cliente
+- **PUT /api/customer-update/{id}**: Atualiza um cliente existente
+- **DELETE /api/customer-delete/{id}/**: Deleta um cliente
 
 ### @api_view - Job
-- **GET /job-list/**:Lista todas os vagas de emprego
-- **GET /job-detail/<int:pk>/**: Detalha uma vaga de emprego específica
-- **POST /job-create/**: Cria uma nova vaga de emprego
-- **PUT /job-update/<int:pk>/**: Atualiza uma vaga de emprego existente
-- **DELETE /job-delete/<int:pk>/**: Deleta uma vaga de emprego
+- **GET /api/job-list/**:Lista todas os vagas de emprego
+- **GET /api/job-detail/{id}/**: Detalha uma vaga de emprego específica
+- **POST /api/job-create/**: Cria uma nova vaga de emprego
+- **PUT /api/job-update/{id}/**: Atualiza uma vaga de emprego existente
+- **DELETE /api/job-delete/{id}/**: Deleta uma vaga de emprego
 
 ### @api_view - Candidate
-- **GET /candidate-list/**:Lista todos os candidatos
-- **GET /candidate-detail/<int:pk>/**: Detalha um candidato específico
-- **POST /candidate-create/**: Cria um novo candidato
-- **PUT /candidate-update/<int:pk>/**: Atualiza um candidato existente
-- **DELETE /candidate-delete/<int:pk>/**: Deleta um candidato
+- **GET /api/candidate-list/**:Lista todos os candidatos
+- **GET /api/candidate-detail/{id}/**: Detalha um candidato específico
+- **POST /api/candidate-create/**: Cria um novo candidato
+- **PUT /api/candidate-update/{id}/**: Atualiza um candidato existente
+- **DELETE /api/candidate-delete/{id}/**: Deleta um candidato
 
 ## 5. Testes
 Testes unitários foram implementados para garantir o funcionamento correto das operações CRUD para `Customer`, `Job` e `Candidate`.
